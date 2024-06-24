@@ -34,6 +34,7 @@ class EditProfileActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         binding.topAppBarProfile.setNavigationOnClickListener  { finish() }
+        getProfile()
     }
 
     private fun getProfile(){
