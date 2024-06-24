@@ -31,6 +31,12 @@ class HomeFragment : Fragment() {
         ViewModelFactory.getInstance(requireActivity().dataStore)
     }
 
+    val launcherOrderDetailActivity = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+        if (it.resultCode == RESULT_OK) {
+            mainViewModel.getHome()
+        }
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
         _fragmentHomeBinding = FragmentHomeBinding.inflate(inflater, container, false)
@@ -40,17 +46,14 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val launcherOrderDetailActivity = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-            if (it.resultCode == RESULT_OK) {
-                mainViewModel.getHome()
-                Toast.makeText(requireActivity(), "RESULT_OK Main", Toast.LENGTH_SHORT).show()
-            }
-        }
-
         binding.btnAllOrdersHome.setOnClickListener {
             startActivity(Intent(requireActivity(), HistoryActivity::class.java))
         }
 
+        getHome()
+    }
+
+    private fun getHome(){
         mainViewModel.homeData.observe(requireActivity()) {
             when(it){
                 is Result.Loading -> {

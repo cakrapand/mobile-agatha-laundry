@@ -49,7 +49,10 @@ class DetailOrderActivity: AppCompatActivity() {
         }!!
 
         binding.topAppBarDetailOrder.setNavigationOnClickListener  { finish() }
+        getOrderById(orderId)
+    }
 
+    private fun getOrderById(orderId: String){
         detailOrderViewModel.getOrderById(orderId).observe(this@DetailOrderActivity){ result ->
             when(result){
                 is Result.Loading ->{
@@ -75,8 +78,6 @@ class DetailOrderActivity: AppCompatActivity() {
                 }
             }
         }
-
-
     }
 
     override fun onDestroy() {

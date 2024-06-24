@@ -27,7 +27,10 @@ class HistoryActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         binding.topAppBarHistory.setNavigationOnClickListener  { finish() }
+        setPagerAdapter()
+    }
 
+    private fun setPagerAdapter(){
         val sectionPagerAdapter = SectionPagerAdapter(this)
         binding.viewPager.adapter = sectionPagerAdapter
         TabLayoutMediator(binding.tabs, binding.viewPager){ tab, position ->
@@ -42,7 +45,6 @@ class HistoryActivity : AppCompatActivity() {
                 }
             }
         }.attach()
-        supportActionBar?.elevation = 0f
     }
 
     override fun onDestroy() {

@@ -10,6 +10,7 @@ import androidx.activity.viewModels
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
+import com.example.agathalaundry.R
 import com.example.agathalaundry.data.Result
 import com.example.agathalaundry.databinding.ActivityEditProfileBinding
 import com.example.agathalaundry.ui.ViewModelFactory
@@ -33,7 +34,9 @@ class EditProfileActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         binding.topAppBarProfile.setNavigationOnClickListener  { finish() }
+    }
 
+    private fun getProfile(){
         editProfileViewModel.getProfile().observe(this@EditProfileActivity){
             when(it){
                 is Result.Loading -> {
@@ -50,28 +53,31 @@ class EditProfileActivity : AppCompatActivity() {
                         val name = binding.edNameEditProfile.editText?.text.toString()
                         val address = binding.edAddressEditProfile.editText?.text.toString()
                         val phone = binding.edPhoneEditProfile.editText?.text.toString()
-
-                        editProfileViewModel.editProfile(name, address, phone).observe(this@EditProfileActivity){ editProfile ->
-                            when(editProfile){
-                                is Result.Loading -> {
-                                    binding.pbEditProfile.visibility = View.VISIBLE
-                                }
-                                is Result.Success -> {
-                                    binding.pbEditProfile.visibility = View.GONE
-                                    Toast.makeText(this@EditProfileActivity, "Profile edited", Toast.LENGTH_SHORT).show()
-                                    setResult(ProfileFragment.RESULT_OK, Intent())
-                                    finish()
-                                }
-                                is Result.Error -> {
-                                    binding.pbEditProfile.visibility = View.GONE
-                                    Toast.makeText(this@EditProfileActivity, editProfile.error, Toast.LENGTH_SHORT).show()
-                                }
-                            }
-                        }
+                        editProfile(name, address, phone)
                     }
                 }
                 is Result.Error -> {
                     binding.pbEditProfile.visibility = View.GONE
+                }
+            }
+        }
+    }
+
+    private fun editProfile(name: String, address: String, phone: String){
+        editProfileViewModel.editProfile(name, address, phone).observe(this@EditProfileActivity){ editProfile ->
+            when(editProfile){
+                is Result.Loading -> {
+                    binding.pbEditProfile.visibility = View.VISIBLE
+                }
+                is Result.Success -> {
+                    binding.pbEditProfile.visibility = View.GONE
+                    Toast.makeText(this@EditProfileActivity, resources.getString(R.string.edit_profile_success), Toast.LENGTH_SHORT).show()
+                    setResult(ProfileFragment.RESULT_OK, Intent())
+                    finish()
+                }
+                is Result.Error -> {
+                    binding.pbEditProfile.visibility = View.GONE
+                    Toast.makeText(this@EditProfileActivity, editProfile.error, Toast.LENGTH_SHORT).show()
                 }
             }
         }

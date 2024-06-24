@@ -34,35 +34,34 @@ class RegisterActivity : AppCompatActivity() {
         _activityRegisterBinding = ActivityRegisterBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        supportActionBar?.hide()
-
         binding.btnRegister.setOnClickListener {
             val email = binding.edEmailRegister.editText?.text.toString().trim()
             val password = binding.edPasswordRegister.editText?.text.toString().trim()
             val name = binding.edNameRegister.editText?.text.toString().trim()
             val address = binding.adAddressRegister.editText?.text.toString().trim()
             val phone = binding.adPhoneRegister.editText?.text.toString().trim()
-
-            registerViewModel.register(email, password, name, address, phone).observe(this@RegisterActivity){result ->
-                when(result){
-                    is Result.Loading ->{
-                        binding.pbRegister.visibility = View.VISIBLE
-                    }
-                    is Result.Success ->{
-                        binding.pbRegister.visibility = View.GONE
-                        Toast.makeText(this@RegisterActivity, "Register Success", Toast.LENGTH_SHORT).show()
-                        finish()
-                    }
-                    is Result.Error ->{
-                        binding.pbRegister.visibility = View.GONE
-                        Toast.makeText(this@RegisterActivity, result.error, Toast.LENGTH_SHORT).show()
-                    }
-                }
-            }
+            register(email, password, name, address, phone)
         }
 
-        binding.btnMoveToLogin.setOnClickListener {
-            finish()
+        binding.btnMoveToLogin.setOnClickListener { finish() }
+    }
+
+    private fun register(email: String, password: String, name: String, address: String, phone: String){
+        registerViewModel.register(email, password, name, address, phone).observe(this@RegisterActivity){ result ->
+            when(result){
+                is Result.Loading ->{
+                    binding.pbRegister.visibility = View.VISIBLE
+                }
+                is Result.Success ->{
+                    binding.pbRegister.visibility = View.GONE
+                    Toast.makeText(this@RegisterActivity, getString(R.string.register_success), Toast.LENGTH_SHORT).show()
+                    finish()
+                }
+                is Result.Error ->{
+                    binding.pbRegister.visibility = View.GONE
+                    Toast.makeText(this@RegisterActivity, result.error, Toast.LENGTH_SHORT).show()
+                }
+            }
         }
     }
 

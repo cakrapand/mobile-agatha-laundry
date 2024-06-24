@@ -23,9 +23,15 @@
     <string name="home_contact"><u>Contact us!</u></string>
     <string name="home_no_active_orders">No orders, lets order!</string>
 
+    <string name="edit_profile_success">Profile Edited</string>
+
     <string name="order_package">Package - Duration</string>
     <string name="order_total_orders">Total Orders: %1$s</string>
     <string name="order_zero_orders">Total Orders: 0</string>
+    <string name="order_dialog_add">Add</string>
+    <string name="order_dialog_cancel">Cancel</string>
+    <string name="order_service_added">Service Added</string>
+    <string name="order_success">Order Success</string>
 
     <string name="detail_order">Detail Order</string>
     <string name="order_date_detail_order">Order Date:</string>
@@ -35,9 +41,13 @@
     <string name="login_button">Login</string>
     <string name="login_register">Dont have account? Register!</string>
     <string name="login_login_to_continue">Login to Continue</string>
+    <string name="login_success">Login Success</string>
+
+    <string name="logout_success">Logout Success</string>
 
     <string name="register_button">Register</string>
     <string name="register_login">Already have account? Login!</string>
+    <string name="register_success">Register Success</string>
 
     <string name="history_active">Active</string>
     <string name="history_all">All</string>

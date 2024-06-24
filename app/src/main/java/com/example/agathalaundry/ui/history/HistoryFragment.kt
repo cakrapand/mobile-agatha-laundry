@@ -32,12 +32,11 @@ class HistoryFragment : Fragment() {
         ViewModelFactory.getInstance(requireActivity().dataStore)
     }
 
-    private val launcherOrderDetailActivity = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-        if (it.resultCode == RESULT_OK) {
-            historyViewModel.getOrders()
-            Toast.makeText(requireActivity(), "RESULT_OK History", Toast.LENGTH_SHORT).show()
-        }
-    }
+//    private val launcherOrderDetailActivity = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+//        if (it.resultCode == RESULT_OK) {
+//            historyViewModel.getOrders()
+//        }
+//    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         // Inflate the layout for this fragment
@@ -49,8 +48,8 @@ class HistoryFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         when (arguments?.getInt(ARG_SECTION_NUMBER, 0)) {
-            0 -> historyViewModel.listOrders.observe(requireActivity()) {setAdapter(it, true)}
-            1 -> historyViewModel.listOrders.observe(requireActivity()) {setAdapter(it, false)}
+            0 -> getActiveOrders()
+            1 -> getAllOrders()
         }
     }
 
@@ -72,7 +71,8 @@ class HistoryFragment : Fragment() {
                     val listHistoryAdapter = HistoryAdapter(requireContext(), listOrdersData) { order ->
                         val intent = Intent(requireActivity(), DetailOrderActivity::class.java)
                         intent.putExtra(DetailOrderActivity.EXTRA_ORDER_ID, order.id)
-                        launcherOrderDetailActivity.launch(intent)
+//                        launcherOrderDetailActivity.launch(intent)
+                        startActivity(intent)
                     }
                     binding.listOrders.apply {
                         layoutManager = LinearLayoutManager(requireActivity())
@@ -87,6 +87,62 @@ class HistoryFragment : Fragment() {
         }
     }
 
+    private fun getActiveOrders(){
+        historyViewModel.listOrders.observe(requireActivity()) { result ->
+            when(result){
+                is Result.Loading -> {
+                    binding.pbHistory.visibility = View.VISIBLE
+                }
+                is Result.Success -> {
+                    binding.pbHistory.visibility = View.GONE
+
+                    val listActiveOrders = result.data.data.filter { it.orderStatus != "DONE" && it.orderStatus != "CANCEL" }
+
+                    val listHistoryAdapter = HistoryAdapter(requireContext(), listActiveOrders) { order ->
+                        val intent = Intent(requireActivity(), DetailOrderActivity::class.java)
+                        intent.putExtra(DetailOrderActivity.EXTRA_ORDER_ID, order.id)
+                        startActivity(intent)
+                    }
+                    binding.listOrders.apply {
+                        layoutManager = LinearLayoutManager(requireActivity())
+                        adapter = listHistoryAdapter
+                    }
+                }
+                is Result.Error -> {
+                    binding.pbHistory.visibility = View.GONE
+                    Toast.makeText(requireContext(), result.error, Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
+    private fun getAllOrders(){
+        historyViewModel.listOrders.observe(requireActivity()) { result ->
+            when(result){
+                is Result.Loading -> {
+                    binding.pbHistory.visibility = View.VISIBLE
+                }
+                is Result.Success -> {
+                    binding.pbHistory.visibility = View.GONE
+
+                    val listHistoryAdapter = HistoryAdapter(requireContext(), result.data.data) { order ->
+                        val intent = Intent(requireActivity(), DetailOrderActivity::class.java)
+                        intent.putExtra(DetailOrderActivity.EXTRA_ORDER_ID, order.id)
+                        startActivity(intent)
+                    }
+                    binding.listOrders.apply {
+                        layoutManager = LinearLayoutManager(requireActivity())
+                        adapter = listHistoryAdapter
+                    }
+                }
+                is Result.Error -> {
+                    binding.pbHistory.visibility = View.GONE
+                    Toast.makeText(requireContext(), result.error, Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         _fragmentHistoryBinding = null
@@ -94,7 +150,7 @@ class HistoryFragment : Fragment() {
 
     companion object{
         const val ARG_SECTION_NUMBER = "section_number"
-        const val RESULT_OK = 200
+//        const val RESULT_OK = 200
     }
 
 }
