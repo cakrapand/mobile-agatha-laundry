@@ -17,7 +17,6 @@
     <string name="edit_profile">Ubah Profile</string>
     <string name="history">Riwayat</string>
 
-
     <string name="home_hello">Halo,</string>
     <string name="home_all_orders_btn">Lihat Semua</string>
     <string name="home_active_orders">Pesanan Aktif</string>
@@ -25,9 +24,15 @@
     <string name="home_contact"><u>Hubungi kami!</u></string>
     <string name="home_no_active_orders">Belum ada pesanan, ayo pesan!</string>
 
+    <string name="edit_profile_success">Profil Diubah</string>
+
     <string name="order_package">Paket - Durasi</string>
     <string name="order_total_orders">Total Pesanan: %1$s</string>
     <string name="order_zero_orders">Total Pesanan: 0</string>
+    <string name="order_dialog_add">Tambah</string>
+    <string name="order_dialog_cancel">Batal</string>
+    <string name="order_service_added">Layanan Ditambahkan</string>
+    <string name="order_success">Pesanan Berhasil</string>
 
     <string name="detail_order">Detail Pesanan</string>
     <string name="order_date_detail_order">Tanggal Pesan:</string>
@@ -37,9 +42,13 @@
     <string name="login_button">Login</string>
     <string name="login_register">Belum memiliki akun? Daftar!</string>
     <string name="login_login_to_continue">Login untuk melanjutkan</string>
+    <string name="login_success">Login Berhasil</string>
+
+    <string name="logout_success">Logout Berhasil</string>
 
     <string name="register_button">Daftar</string>
     <string name="register_login">Sudah memiliki akun? Login!</string>
+    <string name="register_success">Berhasil Daftar</string>
 
     <string name="history_active">Aktif</string>
     <string name="history_all">Semua</string>
