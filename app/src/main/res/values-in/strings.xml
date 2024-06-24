@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Agatha Laundry 2</string>
+
+    <string name="email">Email</string>
+    <string name="password">Kata sandi</string>
+    <string name="name">Nama</string>
+    <string name="address">Alamat</string>
+    <string name="phone">Telepon</string>
+    <string name="save">Simpan</string>
+    <string name="logout">Logout</string>
+    <string name="total">Total</string>
+    <string name="order">Pesan</string>
+    <string name="motto">Your lorem lorem lroem</string>
+    <string name="home">Beranda</string>
+    <string name="profile">Profil</string>
+    <string name="edit_profile">Ubah Profile</string>
+    <string name="history">Riwayat</string>
+    <string name="delete">Hapus</string>
+
+    <string name="home_hello">Halo,</string>
+    <string name="home_all_orders_btn">Lihat Semua</string>
+    <string name="home_active_orders">Pesanan Aktif</string>
+    <string name="home_help">Ada pertanayaan atau butuh bantuan?</string>
+    <string name="home_contact"><u>Hubungi kami!</u></string>
+    <string name="home_no_active_orders">Belum ada pesanan, ayo pesan!</string>
+
+    <string name="order_package">Paket - Durasi</string>
+    <string name="order_add_service">Tambah Layanan</string>
+    <string name="order_total_orders">Total Pesanan: %1$s</string>
+    <string name="order_zero_orders">Total Pesanan: 0</string>
+
+    <string name="detail_order">Detail Pesanan</string>
+    <string name="order_date_detail_order">Tanggal Pesan:</string>
+    <string name="estimate_detail_order">Tanggal Estimasi:</string>
+    <string name="status_detail_order">Status:</string>
+
+    <string name="login_button">Login</string>
+    <string name="login_register">Belum memiliki akun? Daftar!</string>
+    <string name="login_login_to_continue">Login untuk melanjutkan</string>
+
+    <string name="register_button">Daftar</string>
+    <string name="register_login">Sudah memiliki akun? Login!</string>
+
+    <string name="history_active">Aktif</string>
+    <string name="history_all">Semua</string>
+
+    <string name="order_status_payment">Pembayaran</string>
+    <string name="order_status_picked_up">Dijemput</string>
+    <string name="order_status_on_progress">Pengerjaan</string>
+    <string name="order_status_on_deliver">Diantar</string>
+    <string name="order_status_done">Selesai</string>
+    <string name="order_status_cancel">Batal</string>
+
+</resources>
