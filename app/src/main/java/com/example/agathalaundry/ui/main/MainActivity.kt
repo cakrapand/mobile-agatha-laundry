@@ -32,7 +32,6 @@ class MainActivity : AppCompatActivity() {
     private val launcherOrderActivity = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
         if (it.resultCode == RESULT_OK) {
             mainViewModel.getHome()
-            Toast.makeText(this@MainActivity, "RESULT_OK Main", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -45,7 +44,6 @@ class MainActivity : AppCompatActivity() {
 
         _activityMainBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
 
         setMode(R.id.home)
 
