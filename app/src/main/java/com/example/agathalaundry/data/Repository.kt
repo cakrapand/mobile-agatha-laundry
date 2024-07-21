@@ -1,6 +1,5 @@
 package com.example.agathalaundry.data
 
-import android.util.Log
 import com.example.agathalaundry.data.local.AuthPreferences
 import com.example.agathalaundry.data.remote.request.OrderRequest
 import com.example.agathalaundry.data.remote.response.ErrorResponse

@@ -2,6 +2,7 @@
 <resources>
     <string name="app_name">Agatha Laundry</string>
 
+    <string name="app_alias_name">Agatha Laundry X</string>
     <string name="email">Email</string>
     <string name="password">Kata sandi</string>
     <string name="name">Nama</string>
@@ -11,7 +12,7 @@
     <string name="logout">Logout</string>
     <string name="total">Total</string>
     <string name="order">Pesan</string>
-    <string name="motto">Your lorem lorem lroem</string>
+    <string name="motto">Bersih, Aman dan Terpercaya</string>
     <string name="home">Beranda</string>
     <string name="profile">Profil</string>
     <string name="edit_profile">Ubah Profile</string>

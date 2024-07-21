@@ -61,8 +61,11 @@ class HistoryFragment : Fragment() {
                 }
                 is Result.Success -> {
                     binding.pbHistory.visibility = View.GONE
-                    val listOrders = if(activeOnly)filterActiveOrders(result.data.data) else result.data.data
-                    setListAdapter(listOrders)
+                    if(result.data.data.isEmpty()) binding.listOrdersEmptyHistory.visibility = View.VISIBLE
+                    else {
+                        val listOrders = if(activeOnly)filterActiveOrders(result.data.data) else result.data.data
+                        setListAdapter(listOrders)
+                    }
                 }
                 is Result.Error -> {
                     binding.pbHistory.visibility = View.GONE
