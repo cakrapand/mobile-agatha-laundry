@@ -88,7 +88,7 @@ class HistoryFragment : Fragment() {
     }
 
     private fun filterActiveOrders(listOrders: List<Order>): List<Order>{
-        return listOrders.filter { it.orderStatus != "DONE" && it.orderStatus != "CANCEL" }
+         return listOrders.filter { it.orderStatus != "DONE" && it.orderStatus != "CANCEL" }
     }
 
     override fun onDestroy() {
