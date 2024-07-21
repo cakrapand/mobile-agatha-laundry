@@ -35,22 +35,24 @@ class SplashActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        handler.postDelayed({
-            loginViewModel.isLogin().observe(this){ result ->
-                when(result){
-                    is Result.Loading -> {}
-                    is Result.Success -> {
-                        if(result.data != null){
-                            startActivity(Intent(this@SplashActivity, MainActivity::class.java))
-                        }else{
-                            startActivity(Intent(this@SplashActivity, LoginActivity::class.java))
-                        }
-                        finish()
+        handler.postDelayed({ isLogin() }, DELAY_TIME)
+    }
+
+    private fun isLogin(){
+        loginViewModel.isLogin().observe(this){ result ->
+            when(result){
+                is Result.Loading -> {}
+                is Result.Success -> {
+                    if(result.data != null){
+                        startActivity(Intent(this@SplashActivity, MainActivity::class.java))
+                    }else{
+                        startActivity(Intent(this@SplashActivity, LoginActivity::class.java))
                     }
-                    is Result.Error -> { Toast.makeText(this@SplashActivity, result.error, Toast.LENGTH_SHORT).show() }
+                    finish()
                 }
+                is Result.Error -> { Toast.makeText(this@SplashActivity, result.error, Toast.LENGTH_SHORT).show() }
             }
-        }, DELAY_TIME)
+        }
     }
 
     override fun onPause() {
@@ -59,6 +61,6 @@ class SplashActivity : AppCompatActivity() {
     }
 
     companion object{
-        private const val DELAY_TIME: Long = 3000
+        private const val DELAY_TIME: Long = 1000
     }
 }

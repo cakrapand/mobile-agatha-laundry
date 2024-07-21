@@ -32,12 +32,11 @@ class HistoryFragment : Fragment() {
         ViewModelFactory.getInstance(requireActivity().dataStore)
     }
 
-    private val launcherOrderDetailActivity = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-        if (it.resultCode == RESULT_OK) {
-            historyViewModel.getOrders()
-            Toast.makeText(requireActivity(), "RESULT_OK History", Toast.LENGTH_SHORT).show()
-        }
-    }
+//    private val launcherOrderDetailActivity = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+//        if (it.resultCode == RESULT_OK) {
+//            historyViewModel.getOrders()
+//        }
+//    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         // Inflate the layout for this fragment
@@ -49,42 +48,47 @@ class HistoryFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         when (arguments?.getInt(ARG_SECTION_NUMBER, 0)) {
-            0 -> historyViewModel.listOrders.observe(requireActivity()) {setAdapter(it, true)}
-            1 -> historyViewModel.listOrders.observe(requireActivity()) {setAdapter(it, false)}
+            0 -> getOrders(true)
+            1 -> getOrders(false)
         }
     }
 
-    private fun setAdapter (listOrders: Result<BaseResponse<List<Order>>>?, activeOnly: Boolean){
-        if(listOrders != null){
-            when(listOrders){
+    private fun getOrders(activeOnly: Boolean){
+        historyViewModel.listOrders.observe(requireActivity()) { result ->
+            when(result){
                 is Result.Loading -> {
                     binding.pbHistory.visibility = View.VISIBLE
                 }
                 is Result.Success -> {
                     binding.pbHistory.visibility = View.GONE
-
-                    val listOrdersData = if (activeOnly) {
-                        listOrders.data.data.filter { it.orderStatus != "DONE" && it.orderStatus != "CANCEL" }
-                    } else {
-                        listOrders.data.data
-                    }
-
-                    val listHistoryAdapter = HistoryAdapter(requireActivity(), listOrdersData) { order ->
-                        val intent = Intent(requireActivity(), DetailOrderActivity::class.java)
-                        intent.putExtra(DetailOrderActivity.EXTRA_ORDER_ID, order.id)
-                        launcherOrderDetailActivity.launch(intent)
-                    }
-                    binding.listOrders.apply {
-                        layoutManager = LinearLayoutManager(requireActivity())
-                        adapter = listHistoryAdapter
+                    if(result.data.data.isEmpty()) binding.listOrdersEmptyHistory.visibility = View.VISIBLE
+                    else {
+                        val listOrders = if(activeOnly)filterActiveOrders(result.data.data) else result.data.data
+                        setListAdapter(listOrders)
                     }
                 }
                 is Result.Error -> {
                     binding.pbHistory.visibility = View.GONE
-                    Toast.makeText(requireActivity(), listOrders.error, Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), result.error, Toast.LENGTH_SHORT).show()
                 }
             }
         }
+    }
+
+    private fun setListAdapter(listOrders: List<Order>){
+        val listHistoryAdapter = HistoryAdapter(requireContext(), listOrders) { order ->
+            val intent = Intent(requireActivity(), DetailOrderActivity::class.java)
+            intent.putExtra(DetailOrderActivity.EXTRA_ORDER_ID, order.id)
+            startActivity(intent)
+        }
+        binding.listOrders.apply {
+            layoutManager = LinearLayoutManager(requireActivity())
+            adapter = listHistoryAdapter
+        }
+    }
+
+    private fun filterActiveOrders(listOrders: List<Order>): List<Order>{
+        return listOrders.filter { it.orderStatus != "DONE" && it.orderStatus != "CANCEL" }
     }
 
     override fun onDestroy() {
@@ -94,7 +98,7 @@ class HistoryFragment : Fragment() {
 
     companion object{
         const val ARG_SECTION_NUMBER = "section_number"
-        const val RESULT_OK = 200
+//        const val RESULT_OK = 200
     }
 
 }

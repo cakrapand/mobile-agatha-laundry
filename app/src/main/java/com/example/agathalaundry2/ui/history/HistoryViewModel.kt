@@ -19,7 +19,7 @@ class HistoryViewModel(private val repository: Repository) : ViewModel() {
         getOrders()
     }
 
-    fun getOrders(){
+    private fun getOrders(){
         viewModelScope.launch {
             repository.getOrders().collect{
                 _listOrders.value = it

@@ -39,27 +39,31 @@ class LoginActivity : AppCompatActivity() {
         binding.btnLogin.setOnClickListener {
             val email = binding.edEmailLogin.editText?.text.toString().trim()
             val password = binding.edPasswordLogin.editText?.text.toString().trim()
-            loginViewModel.login(email, password).observe(this@LoginActivity){ result ->
-                when(result){
-                    is Result.Loading ->{
-                        binding.pbLogin.visibility = View.VISIBLE
-                    }
-                    is Result.Success ->{
-                        binding.pbLogin.visibility = View.GONE
-                        Toast.makeText(this@LoginActivity, "Login Success", Toast.LENGTH_SHORT).show()
-                        startActivity(Intent(this@LoginActivity, MainActivity::class.java))
-                        finish()
-                    }
-                    is Result.Error ->{
-                        binding.pbLogin.visibility = View.GONE
-                        Toast.makeText(this@LoginActivity, result.error, Toast.LENGTH_SHORT).show()
-                    }
-                }
-            }
+            login(email, password)
         }
 
         binding.btnMoveToRegister.setOnClickListener {
             startActivity(Intent(this@LoginActivity, RegisterActivity::class.java))
+        }
+    }
+
+    private fun login(email: String, password: String){
+        loginViewModel.login(email, password).observe(this@LoginActivity){ result ->
+            when(result){
+                is Result.Loading ->{
+                    binding.pbLogin.visibility = View.VISIBLE
+                }
+                is Result.Success ->{
+                    binding.pbLogin.visibility = View.GONE
+                    Toast.makeText(this@LoginActivity,  resources.getString(R.string.login_success), Toast.LENGTH_SHORT).show()
+                    startActivity(Intent(this@LoginActivity, MainActivity::class.java))
+                    finish()
+                }
+                is Result.Error ->{
+                    binding.pbLogin.visibility = View.GONE
+                    Toast.makeText(this@LoginActivity, result.error, Toast.LENGTH_SHORT).show()
+                }
+            }
         }
     }
 

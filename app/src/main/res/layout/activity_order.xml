@@ -19,6 +19,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:minHeight="?attr/actionBarSize"
+            app:titleTextColor="#FFFFFF"
             app:navigationIcon="@drawable/baseline_arrow_back_24"
             app:title="@string/order" />
 
@@ -29,14 +30,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
+        android:text="@string/order_dialog_add"
         app:icon="@drawable/baseline_add_24"
-        android:text="@string/order_add_service"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/layout_order_packages"
         app:layout_constraintTop_toBottomOf="@+id/app_bar_layout_order" />
 
     <com.google.android.material.textfield.TextInputLayout
-        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
         android:id="@+id/layout_order_packages"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -45,7 +45,8 @@
         app:layout_constraintBottom_toBottomOf="@+id/btn_add_service"
         app:layout_constraintEnd_toStartOf="@+id/btn_add_service"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/btn_add_service">
+        app:layout_constraintTop_toTopOf="@+id/btn_add_service"
+        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu">
 
         <AutoCompleteTextView
             android:id="@+id/dd_order_packages"
@@ -76,7 +77,6 @@
         app:layout_constraintStart_toStartOf="parent">
 
         <com.google.android.material.bottomappbar.BottomAppBar
-            style="@style/Widget.MaterialComponents.BottomAppBar"
             android:id="@+id/bottomAppBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -100,6 +100,8 @@
                 android:text="@string/order_zero_orders"
                 android:layout_marginHorizontal="8dp"
                 android:layout_gravity="end"/>
+
+
         </com.google.android.material.bottomappbar.BottomAppBar>
 
 

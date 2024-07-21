@@ -32,21 +32,18 @@ class MainActivity : AppCompatActivity() {
     private val launcherOrderActivity = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
         if (it.resultCode == RESULT_OK) {
             mainViewModel.getHome()
-            Toast.makeText(this@MainActivity, "RESULT_OK Main", Toast.LENGTH_SHORT).show()
         }
     }
 
     private val mFragmentManager = supportFragmentManager
     private val mHomeFragment = HomeFragment()
     private val mProfileFragment = ProfileFragment()
-//    private var title : String = "Home"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         _activityMainBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
 
         setMode(R.id.home)
 
@@ -60,7 +57,6 @@ class MainActivity : AppCompatActivity() {
         when (selectedMode){
             R.id.home -> {
                 navigateToFragment(mHomeFragment)
-//                title ="Home"
             }
             R.id.order -> {
                 val intent = Intent(this, OrderActivity::class.java)
@@ -68,7 +64,6 @@ class MainActivity : AppCompatActivity() {
             }
             R.id.profile -> {
                 navigateToFragment(mProfileFragment)
-//                title ="Profile"
             }
         }
     }

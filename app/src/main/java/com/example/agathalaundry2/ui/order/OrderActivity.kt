@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.agathalaundry2.R
 import com.example.agathalaundry2.adapter.OrderAdapter
 import com.example.agathalaundry2.data.Result
+import com.example.agathalaundry2.data.remote.response.model.PackageOnService
 import com.example.agathalaundry2.databinding.ActivityOrderBinding
 import com.example.agathalaundry2.ui.ViewModelFactory
 import com.example.agathalaundry2.ui.main.MainActivity
@@ -41,91 +42,100 @@ class OrderActivity : AppCompatActivity() {
 
         binding.topAppBarOrder.setNavigationOnClickListener  { finish() }
 
+        getListPackages()
+
+        binding.btnOrder.setOnClickListener { order() }
+    }
+
+    private fun getListPackages(){
         orderViewModel.listPackages.observe(this) { listPackages ->
             if (listPackages != null) {
                 when (listPackages) {
                     is Result.Loading -> {
                         binding.pbOrder.visibility = View.VISIBLE
                     }
-
                     is Result.Success -> {
-                        //Setting items for packages dropdown
-                        val ddPackageItems = listPackages.data.data.map { it.`package`.name }.distinct().toTypedArray()
-                        (binding.ddOrderPackages as MaterialAutoCompleteTextView).setSimpleItems(ddPackageItems)
-
-                        //Set default value for selected package and listServices
-                        var selectedPackage = ddPackageItems[0]
-                        var listServices =  listPackages.data.data.filter { it.`package`.name == selectedPackage }.toTypedArray()
-                        (binding.ddOrderPackages as MaterialAutoCompleteTextView).setText(selectedPackage, false)
-
-                        //Set service list dialog
-                        var selectedServiceIndex = 0
-                        binding.btnAddService.setOnClickListener {
-                            MaterialAlertDialogBuilder(this@OrderActivity)
-                                .setTitle(resources.getString(R.string.app_name))
-                                .setNegativeButton("Cancel") { dialog, _ ->
-                                    dialog.dismiss()
-                                }
-                                .setPositiveButton("Accept") { dialog, which ->
-                                    Toast.makeText(this@OrderActivity,"${listServices[selectedServiceIndex].id}",Toast.LENGTH_SHORT).show()
-                                    orderViewModel.addOrder(listServices[selectedServiceIndex].id)
-                                }
-                                .setSingleChoiceItems(listServices.map { it.service.name }.toTypedArray(), 0) { _, which ->
-                                    selectedServiceIndex = which
-                                }.show()
-                        }
-
-                        //Set on listener when dropdown package updated and update listServices dialog
-                        binding.ddOrderPackages.setOnItemClickListener { adapterView, view, i, l ->
-                            selectedPackage = ddPackageItems[i]
-                            listServices = listPackages.data.data.filter { it.`package`.name == selectedPackage }.toTypedArray()
-                        }
-
-                        //Observe list orders
-                        orderViewModel.listOrders.observe(this) { listOrders ->
-                            //Update list order adapter
-                            binding.tvTotalService.text = getString(R.string.order_total_orders, listOrders.size.toString())
-                            val listOrderAdapter = OrderAdapter(
-                                listServices = listPackages.data.data,
-                                listOrders = listOrders,
-                                onClick = { pos ->
-                                    Toast.makeText(this@OrderActivity,"Deleted",Toast.LENGTH_SHORT).show()
-                                    orderViewModel.deleteOrder(pos)
-                                }
-                            )
-                            binding.listOrders.apply {
-                                layoutManager = LinearLayoutManager(this@OrderActivity)
-                                adapter = listOrderAdapter
-                            }
-                        }
-
-                        binding.btnOrder.setOnClickListener {
-                            orderViewModel.order().observe(this) { result ->
-                                when (result) {
-                                    is Result.Loading -> {
-                                        binding.pbOrder.visibility = View.VISIBLE
-                                    }
-                                    is Result.Success -> {
-                                        binding.pbOrder.visibility = View.GONE
-                                        Toast.makeText(this@OrderActivity, result.data.message, Toast.LENGTH_SHORT).show()
-                                        setResult(MainActivity.RESULT_OK, Intent())
-                                        finish()
-                                    }
-                                    is Result.Error -> {
-                                        binding.pbOrder.visibility = View.GONE
-                                        Toast.makeText(this@OrderActivity, result.error, Toast.LENGTH_SHORT).show()
-                                    }
-                                }
-                            }
-                        }
+                        //set package dropdown items and service dialog
+                        setPackageItems(listPackages.data.data)
 
                         binding.pbOrder.visibility = View.GONE
-                    }
 
+                        //Observe list orders
+                        observeListOrders(listPackages.data.data)
+                    }
                     is Result.Error -> {
                         binding.pbOrder.visibility = View.GONE
                         Toast.makeText(this, listPackages.error, Toast.LENGTH_SHORT).show()
                     }
+                }
+            }
+        }
+    }
+
+    private fun setPackageItems(listPackages: List<PackageOnService>){
+        //Setting items for packages dropdown
+        val ddPackageItems = listPackages.map { it.`package`.name }.distinct().toTypedArray()
+        (binding.ddOrderPackages as MaterialAutoCompleteTextView).setSimpleItems(ddPackageItems)
+
+        //Set default value for selected package and listServices
+        var selectedPackage = ddPackageItems[0]
+        var listServices =  listPackages.filter { it.`package`.name == selectedPackage }.toTypedArray()
+        (binding.ddOrderPackages as MaterialAutoCompleteTextView).setText(selectedPackage, false)
+
+        //Set on listener when dropdown package updated and update listServices dialog
+        binding.ddOrderPackages.setOnItemClickListener { adapterView, view, i, l ->
+            selectedPackage = ddPackageItems[i]
+            listServices = listPackages.filter { it.`package`.name == selectedPackage }.toTypedArray()
+        }
+
+        //Set service list dialog
+        var selectedServiceIndex = 0
+        binding.btnAddService.setOnClickListener {
+            MaterialAlertDialogBuilder(this@OrderActivity)
+                .setTitle(resources.getString(R.string.app_name))
+                .setNegativeButton(resources.getString(R.string.order_dialog_cancel)) { dialog, _ ->
+                    dialog.dismiss()
+                }
+                .setPositiveButton(resources.getString(R.string.order_dialog_add)) { _, _ ->
+                    Toast.makeText(this@OrderActivity, resources.getString(R.string.order_service_added), Toast.LENGTH_SHORT).show()
+                    orderViewModel.addOrder(listServices[selectedServiceIndex].id)
+                }
+                .setSingleChoiceItems(listServices.map { it.service.name }.toTypedArray(), 0) { _, which ->
+                    selectedServiceIndex = which
+                }.show()
+        }
+    }
+
+    private fun observeListOrders(listPackages: List<PackageOnService>){
+        orderViewModel.listOrders.observe(this) { listOrders ->
+            binding.tvTotalService.text = getString(R.string.order_total_orders, listOrders.size.toString())
+            val listOrderAdapter = OrderAdapter(
+                listServices = listPackages,
+                listOrders = listOrders,
+                onClick = { pos -> orderViewModel.deleteOrder(pos) }
+            )
+            binding.listOrders.apply {
+                layoutManager = LinearLayoutManager(this@OrderActivity)
+                adapter = listOrderAdapter
+            }
+        }
+    }
+
+    private fun order(){
+        orderViewModel.order().observe(this) { result ->
+            when (result) {
+                is Result.Loading -> {
+                    binding.pbOrder.visibility = View.VISIBLE
+                }
+                is Result.Success -> {
+                    binding.pbOrder.visibility = View.GONE
+                    Toast.makeText(this@OrderActivity, resources.getString(R.string.order_success), Toast.LENGTH_SHORT).show()
+                    setResult(MainActivity.RESULT_OK, Intent())
+                    finish()
+                }
+                is Result.Error -> {
+                    binding.pbOrder.visibility = View.GONE
+                    Toast.makeText(this@OrderActivity, result.error, Toast.LENGTH_SHORT).show()
                 }
             }
         }

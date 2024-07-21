@@ -8,11 +8,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.fragment.app.activityViewModels
+import com.example.agathalaundry2.R
 import com.example.agathalaundry2.data.Result
 import com.example.agathalaundry2.databinding.FragmentProfileBinding
 import com.example.agathalaundry2.ui.ViewModelFactory
@@ -29,6 +31,8 @@ class ProfileFragment : Fragment() {
         ViewModelFactory.getInstance(requireActivity().dataStore)
     }
 
+    private lateinit var launcherEditProfileActivity: ActivityResultLauncher<Intent>
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
         _fragmentProfileBinding = FragmentProfileBinding.inflate(inflater, container, false)
@@ -38,32 +42,42 @@ class ProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val launcherEditProfileActivity = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+        launcherEditProfileActivity = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             if (it.resultCode == RESULT_OK) {
                 mainViewModel.getProfile()
             }
         }
 
-        binding.btnLogout.setOnClickListener {
-            mainViewModel.logout().observe(requireActivity()){
-                when(it){
-                    is Result.Loading -> {
-                        binding.pbProfile.visibility = View.VISIBLE
-                    }
-                    is Result.Success -> {
-                        binding.pbProfile.visibility = View.GONE
-                        Toast.makeText(requireActivity(), "Logged Out", Toast.LENGTH_SHORT).show()
-                        startActivity(Intent(requireActivity(), LoginActivity::class.java))
-                        requireActivity().finish()
-                    }
-                    is Result.Error -> {
-                        binding.pbProfile.visibility = View.GONE
-                        Toast.makeText(requireActivity(), it.error, Toast.LENGTH_SHORT).show()
-                    }
+        getProfile()
+        binding.btnLogout.setOnClickListener { logout() }
+
+        binding.btnEditProfile.setOnClickListener {
+            val intent = Intent(requireActivity(), EditProfileActivity::class.java)
+            launcherEditProfileActivity.launch(intent)
+        }
+    }
+
+    private fun logout(){
+        mainViewModel.logout().observe(requireActivity()){
+            when(it){
+                is Result.Loading -> {
+                    binding.pbProfile.visibility = View.VISIBLE
+                }
+                is Result.Success -> {
+                    binding.pbProfile.visibility = View.GONE
+                    Toast.makeText(requireActivity(), resources.getString(R.string.logout_success), Toast.LENGTH_SHORT).show()
+                    startActivity(Intent(requireActivity(), LoginActivity::class.java))
+                    requireActivity().finish()
+                }
+                is Result.Error -> {
+                    binding.pbProfile.visibility = View.GONE
+                    Toast.makeText(requireActivity(), it.error, Toast.LENGTH_SHORT).show()
                 }
             }
         }
+    }
 
+    private fun getProfile(){
         mainViewModel.profileData.observe(requireActivity()) {
             when(it){
                 is Result.Loading -> {
@@ -80,11 +94,6 @@ class ProfileFragment : Fragment() {
                     binding.pbProfile.visibility = View.GONE
                 }
             }
-        }
-
-        binding.btnEditProfile.setOnClickListener {
-            val intent = Intent(requireActivity(), EditProfileActivity::class.java)
-            launcherEditProfileActivity.launch(intent)
         }
     }
 

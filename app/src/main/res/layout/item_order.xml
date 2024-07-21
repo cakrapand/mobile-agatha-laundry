@@ -24,7 +24,7 @@
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="Cuci Kering Setrika - Hemat" />
+            tools:text="Cuci Kering - Hemat" />
 
         <TextView
             android:id="@+id/tv_duration_item_order"

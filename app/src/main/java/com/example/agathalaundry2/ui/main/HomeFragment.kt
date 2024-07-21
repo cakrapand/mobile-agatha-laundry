@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
@@ -21,7 +22,7 @@ import com.example.agathalaundry2.ui.ViewModelFactory
 import com.example.agathalaundry2.ui.detailorder.DetailOrderActivity
 import com.example.agathalaundry2.ui.history.HistoryActivity
 
-class HomeFragment : Fragment() {
+class HomeFragment() : Fragment() {
     private var _fragmentHomeBinding: FragmentHomeBinding? = null
     private val binding get() = _fragmentHomeBinding!!
 
@@ -30,6 +31,8 @@ class HomeFragment : Fragment() {
     private val mainViewModel: MainViewModel by activityViewModels {
         ViewModelFactory.getInstance(requireActivity().dataStore)
     }
+
+    private lateinit var launcherOrderDetailActivity: ActivityResultLauncher<Intent>
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
@@ -40,10 +43,9 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val launcherOrderDetailActivity = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+        launcherOrderDetailActivity = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             if (it.resultCode == RESULT_OK) {
                 mainViewModel.getHome()
-                Toast.makeText(requireActivity(), "RESULT_OK Main", Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -51,6 +53,10 @@ class HomeFragment : Fragment() {
             startActivity(Intent(requireActivity(), HistoryActivity::class.java))
         }
 
+        getHome()
+    }
+
+    private fun getHome(){
         mainViewModel.homeData.observe(requireActivity()) {
             when(it){
                 is Result.Loading -> {
@@ -61,7 +67,7 @@ class HomeFragment : Fragment() {
                     binding.tvNameHome.text = it.data.data.user.userProfile.name
                     binding.tvAddressHome.text = it.data.data.user.userProfile.address
 
-                    if(it.data.data.orders.isNullOrEmpty()) binding.listActiveOrdersEmptyHome.visibility = View.VISIBLE
+                    if(it.data.data.orders.isEmpty()) binding.listActiveOrdersEmptyHome.visibility = View.VISIBLE
                     else binding.listActiveOrdersEmptyHome.visibility = View.GONE
 
                     val listOrderActiveAdapter = OrderActiveAdapter(requireContext(), it.data.data.orders) { order ->

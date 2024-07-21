@@ -1,6 +1,5 @@
 package com.example.agathalaundry2.data
 
-import android.util.Log
 import com.example.agathalaundry2.data.local.AuthPreferences
 import com.example.agathalaundry2.data.remote.request.OrderRequest
 import com.example.agathalaundry2.data.remote.response.ErrorResponse
@@ -18,20 +17,8 @@ class Repository(private val apiService: ApiService, private val authPreferences
                 emit(Result.Success(it))
             }
         } catch (e: Exception) {
-            if (e is HttpException) {
-                val responseError: ErrorResponse =
-                    try {
-                        Gson().fromJson(
-                            e.response()?.errorBody()?.string(),
-                            ErrorResponse::class.java
-                        )
-                    } catch (err: Exception) {
-                        ErrorResponse(500, "Something went wrong")
-                    }
-                emit(Result.Error(responseError.message))
-            } else {
-                emit(Result.Error(e.message.toString()))
-            }
+            if (e is HttpException) emit(Result.Error(getHttpError(e).message))
+            else emit(Result.Error(e.message.toString()))
         }
     }
 
@@ -42,20 +29,8 @@ class Repository(private val apiService: ApiService, private val authPreferences
             authPreferences.saveToken(result.data.token)
             emit(Result.Success(result))
         } catch (e: Exception) {
-            if (e is HttpException) {
-                val responseError: ErrorResponse =
-                    try {
-                        Gson().fromJson(
-                            e.response()?.errorBody()?.string(),
-                            ErrorResponse::class.java
-                        )
-                    } catch (err: Exception) {
-                        ErrorResponse(500, "Something went wrong")
-                    }
-                emit(Result.Error(responseError.message))
-            } else {
-                emit(Result.Error(e.message.toString()))
-            }
+            if (e is HttpException) emit(Result.Error(getHttpError(e).message))
+            else emit(Result.Error(e.message.toString()))
         }
     }
 
@@ -66,20 +41,8 @@ class Repository(private val apiService: ApiService, private val authPreferences
                 val result = apiService.register(email, password, name, address, phone)
                 emit(Result.Success(result))
             } catch (e: Exception) {
-                if (e is HttpException) {
-                    val responseError: ErrorResponse =
-                        try {
-                            Gson().fromJson(
-                                e.response()?.errorBody()?.string(),
-                                ErrorResponse::class.java
-                            )
-                        } catch (err: Exception) {
-                            ErrorResponse(500, "Something went wrong")
-                        }
-                    emit(Result.Error(responseError.message))
-                } else {
-                    emit(Result.Error(e.message.toString()))
-                }
+                if (e is HttpException) emit(Result.Error(getHttpError(e).message))
+                else emit(Result.Error(e.message.toString()))
             }
         }
 
@@ -93,20 +56,8 @@ class Repository(private val apiService: ApiService, private val authPreferences
                 }
             }
         } catch (e: Exception) {
-            if (e is HttpException) {
-                val responseError: ErrorResponse =
-                    try {
-                        Gson().fromJson(
-                            e.response()?.errorBody()?.string(),
-                            ErrorResponse::class.java
-                        )
-                    } catch (err: Exception) {
-                        ErrorResponse(500, "Something went wrong")
-                    }
-                emit(Result.Error(responseError.message))
-            } else {
-                emit(Result.Error(e.message.toString()))
-            }
+            if (e is HttpException) emit(Result.Error(getHttpError(e).message))
+            else emit(Result.Error(e.message.toString()))
         }
     }
 
@@ -120,20 +71,8 @@ class Repository(private val apiService: ApiService, private val authPreferences
                 }
             }
         } catch (e: Exception) {
-            if (e is HttpException) {
-                val responseError: ErrorResponse =
-                    try {
-                        Gson().fromJson(
-                            e.response()?.errorBody()?.string(),
-                            ErrorResponse::class.java
-                        )
-                    } catch (err: Exception) {
-                        ErrorResponse(500, "Something went wrong")
-                    }
-                emit(Result.Error(responseError.message))
-            } else {
-                emit(Result.Error(e.message.toString()))
-            }
+            if (e is HttpException) emit(Result.Error(getHttpError(e).message))
+            else emit(Result.Error(e.message.toString()))
         }
     }
 
@@ -147,20 +86,8 @@ class Repository(private val apiService: ApiService, private val authPreferences
                 }
             }
         } catch (e: Exception) {
-            if (e is HttpException) {
-                val responseError: ErrorResponse =
-                    try {
-                        Gson().fromJson(
-                            e.response()?.errorBody()?.string(),
-                            ErrorResponse::class.java
-                        )
-                    } catch (err: Exception) {
-                        ErrorResponse(500, "Something went wrong")
-                    }
-                emit(Result.Error(responseError.message))
-            } else {
-                emit(Result.Error(e.message.toString()))
-            }
+            if (e is HttpException) emit(Result.Error(getHttpError(e).message))
+            else emit(Result.Error(e.message.toString()))
         }
     }
 
@@ -174,20 +101,8 @@ class Repository(private val apiService: ApiService, private val authPreferences
                 }
             }
         } catch (e: Exception) {
-            if (e is HttpException) {
-                val responseError: ErrorResponse =
-                    try {
-                        Gson().fromJson(
-                            e.response()?.errorBody()?.string(),
-                            ErrorResponse::class.java
-                        )
-                    } catch (err: Exception) {
-                        ErrorResponse(500, "Something went wrong")
-                    }
-                emit(Result.Error(responseError.message))
-            } else {
-                emit(Result.Error(e.message.toString()))
-            }
+            if (e is HttpException) emit(Result.Error(getHttpError(e).message))
+            else emit(Result.Error(e.message.toString()))
         }
     }
 
@@ -201,20 +116,8 @@ class Repository(private val apiService: ApiService, private val authPreferences
                 }
             }
         } catch (e: Exception) {
-            if (e is HttpException) {
-                val responseError: ErrorResponse =
-                    try {
-                        Gson().fromJson(
-                            e.response()?.errorBody()?.string(),
-                            ErrorResponse::class.java
-                        )
-                    } catch (err: Exception) {
-                        ErrorResponse(500, "Something went wrong")
-                    }
-                emit(Result.Error(responseError.message))
-            } else {
-                emit(Result.Error(e.message.toString()))
-            }
+            if (e is HttpException) emit(Result.Error(getHttpError(e).message))
+            else emit(Result.Error(e.message.toString()))
         }
     }
 
@@ -228,21 +131,8 @@ class Repository(private val apiService: ApiService, private val authPreferences
                 }
             }
         } catch (e: Exception) {
-            Log.i("TEST", "getPackages: ${e}")
-            if (e is HttpException) {
-                val responseError: ErrorResponse =
-                    try {
-                        Gson().fromJson(
-                            e.response()?.errorBody()?.string(),
-                            ErrorResponse::class.java
-                        )
-                    } catch (err: Exception) {
-                        ErrorResponse(500, "Something went wrong")
-                    }
-                emit(Result.Error(responseError.message))
-            } else {
-                emit(Result.Error(e.message.toString()))
-            }
+            if (e is HttpException) emit(Result.Error(getHttpError(e).message))
+            else emit(Result.Error(e.message.toString()))
         }
     }
 
@@ -253,29 +143,13 @@ class Repository(private val apiService: ApiService, private val authPreferences
         try {
             authPreferences.getToken().collect {
                 if (it != null) {
-                    val result = apiService.addOrder(
-                        token = it,
-                        orderDetails = orderRequest,
-                    )
+                    val result = apiService.addOrder(it, orderRequest)
                     emit(Result.Success(result))
                 }
             }
         } catch (e: Exception) {
-            Log.d("TEST", "${e}")
-            if (e is HttpException) {
-                val responseError: ErrorResponse =
-                    try {
-                        Gson().fromJson(
-                            e.response()?.errorBody()?.string(),
-                            ErrorResponse::class.java
-                        )
-                    } catch (err: Exception) {
-                        ErrorResponse(500, "Something went wrong")
-                    }
-                emit(Result.Error(responseError.message))
-            } else {
-                emit(Result.Error(e.message.toString()))
-            }
+            if (e is HttpException) emit(Result.Error(getHttpError(e).message))
+            else emit(Result.Error(e.message.toString()))
         }
     }
 
@@ -285,8 +159,15 @@ class Repository(private val apiService: ApiService, private val authPreferences
             authPreferences.logout()
             emit(Result.Success("Logout Success"))
         }catch (e: Exception){
-            Log.d("Repository", "logout: ${e.message.toString()} ")
             emit(Result.Error(e.message.toString()))
+        }
+    }
+
+    private fun getHttpError(e: HttpException): ErrorResponse{
+        return try {
+            Gson().fromJson(e.response()?.errorBody()?.string(), ErrorResponse::class.java)
+        } catch (err: Exception) {
+            ErrorResponse(500, "Something went wrong")
         }
     }
 
@@ -300,15 +181,6 @@ class Repository(private val apiService: ApiService, private val authPreferences
             instance ?: synchronized(this) {
                 instance ?: Repository(apiService, authPreferences)
             }.also { instance = it }
-
-        private const val GOAL_KEY: String = "goal"
-        private const val GENDER_KEY: String = "gender"
-        private const val HEIGHT_KEY = "height"
-        private const val WEIGHT_KEY = "weight"
-        private const val LEVEL_KEY = "level"
-        private const val TARGET_KEY = "target"
-        private const val NAME_KEY = "name"
-        private const val AGE_KEY = "age"
     }
 }
 

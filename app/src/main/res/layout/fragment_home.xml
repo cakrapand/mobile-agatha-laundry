@@ -106,14 +106,15 @@
         android:id="@+id/layout_middle3_home"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="4dp"
         app:layout_constraintBottom_toTopOf="@+id/layout_bottom_home"
         app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginHorizontal="4dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/layout_middle2_home">
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:minHeight="140dp"
             android:paddingVertical="8dp">
 
             <TextView
@@ -153,7 +154,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/home_no_active_orders"
+                android:textSize="16sp"
+                android:textStyle="bold"
                 android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/tv_active_orders_home"
                 app:layout_constraintTop_toBottomOf="@+id/tv_active_orders_home" />
         </androidx.constraintlayout.widget.ConstraintLayout>
